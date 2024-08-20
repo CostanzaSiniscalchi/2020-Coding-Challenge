@@ -34,11 +34,13 @@ function increase_score(id) {
     contentType: "application/json; charset=utf-8",
     data: JSON.stringify(team_id),
     success: function(result) {
-      // Find the updated team data from the result
-      var updatedTeam = result.scoreboard.find(team => team.id === id);
+      // Sort the scoreboard in descending order by score
+      result.scoreboard.sort(function(a, b) {
+        return b.score - a.score;
+      });
       
-      // Update the score in the DOM
-      $("div[data-team-id='" + id + "'] .team-score").text(updatedTeam.score);
+      // Redisplay the sorted scoreboard
+      display_scoreboard(result.scoreboard);
     },
     error: function(request, status, error) {
       console.log("Error");
@@ -48,6 +50,7 @@ function increase_score(id) {
     }
   });
 }
+
 
 $(document).ready(function(){
   display_scoreboard(scoreboard);
